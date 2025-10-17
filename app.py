@@ -224,6 +224,11 @@ scheduler.start()
 
 atexit.register(lambda: scheduler.shutdown())
 
+# Initialize database tables
+with app.app_context():
+    db.create_all()
+    print("✅ Database tables created/verified")
+
 @app.route('/')
 def index():
     """Main page showing crypto prices, news, weather and time"""
