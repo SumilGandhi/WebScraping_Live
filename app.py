@@ -7,11 +7,19 @@ from bs4 import BeautifulSoup
 import atexit
 import json
 import pytz
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///crypto_data.db'
+
+# Use environment variables for production, fallback to defaults for local dev
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///crypto_data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'crypto-scraper-2025-secret-key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'crypto-scraper-2025-secret-key')
+
+# Fix Postgres URL for SQLAlchemy (Render uses 'postgres://' but SQLAlchemy needs 'postgresql://')
+if app.config['SQLALCHEMY_DATABASE_URI'].startswith('postgres://'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace('postgres://', 'postgresql://', 1)
+
 db = SQLAlchemy(app)
 
 class CryptoPrice(db.Model):
