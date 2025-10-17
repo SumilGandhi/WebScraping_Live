@@ -181,7 +181,7 @@ def fetch_weather(city="London"):
     with app.app_context():
         try:
             # Using OpenWeatherMap API (free tier - get API key from openweathermap.org)
-            # For demo, using wttr.in which doesn't require API key
+            # For demo, using wttr.in which doesn't require            curl -X GET https://your-app-url.onrender.com/refresh            curl -X GET https://your-app-url.onrender.com/refresh API key
             url = f"https://wttr.in/{city}?format=j1"
             response = requests.get(url, timeout=10)
             response.raise_for_status()
